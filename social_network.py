@@ -25,6 +25,15 @@ class SocialNetwork:
             print(f"User with ID {user_id} already exists.")
             return False
         
+        try:
+            age = int(age)
+            if age <= 0:
+                print("Age must be a positive number.")
+                return False
+        except ValueError:
+            print("Invalid age. Please enter a number.")
+            return False
+        
         self.users[user_id] = User(user_id, name, age)
         self.adj_list[user_id] = set()
         print(f"User '{name}' added successfully.")
