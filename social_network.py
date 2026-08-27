@@ -101,6 +101,8 @@ class SocialNetwork:
         Space Complexity: O(min(D1, D2)) for returning the list
         """
         if user_id1 not in self.users or user_id2 not in self.users:
+            # This message is handled by the caller (suggest_friends) if users don't exist.
+            # For direct calls, it's still useful.
             print("One or both users do not exist.")
             return []
             
@@ -123,7 +125,8 @@ class SocialNetwork:
         for other_id in self.users:
             if other_id == user_id or other_id in my_friends:
                 continue
-                
+            
+            # No need to check if other_id exists here, as we are iterating over self.users
             mutual_count = len(self.get_mutual_friends(user_id, other_id))
             if mutual_count > 0:
                 suggestions.append((other_id, mutual_count))
@@ -229,7 +232,11 @@ def main():
             if mutuals:
                 print(f"Mutual friends: {[network.users[m].name for m in mutuals]}")
             else:
-                print("No mutual friends found.")
+                # The get_mutual_friends method already prints "One or both users do not exist."
+                # if the users are not found. So, this else block only runs if users exist
+                # but have no mutual friends.
+                if uid1 in network.users and uid2 in network.users:
+                    print("No mutual friends found.")
             
         elif choice == '6':
             uid = input("Enter user ID: ")
@@ -239,7 +246,11 @@ def main():
                 for s_id, count in suggestions:
                     print(f"- {network.users[s_id].name} (ID: {s_id}) with {count} mutual friends")
             else:
-                print("No suggestions available.")
+                # The suggest_friends method already prints "User does not exist."
+                # if the user is not found. So, this else block only runs if the user exists
+                # but has no suggestions.
+                if uid in network.users:
+                    print("No suggestions available.")
                 
         elif choice == '7':
             uid1 = input("Enter start user ID: ")
@@ -249,7 +260,11 @@ def main():
                 names = [network.users[p].name for p in path]
                 print(f"Shortest path ({len(path)-1} degrees of separation): {' -> '.join(names)}")
             else:
-                print("No path found between these users.")
+                # The shortest_path method already prints "One or both users do not exist."
+                # if the users are not found. So, this else block only runs if users exist
+                # but no path is found.
+                if uid1 in network.users and uid2 in network.users:
+                    print("No path found between these users.")
                 
         elif choice == '8':
             network.display_network()
