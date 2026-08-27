@@ -41,7 +41,7 @@ class SocialNetwork:
 
     def remove_user(self, user_id):
         """
-        Time Complexity: O(V) in worst case since we have to remove the user from all friends' adjacency lists.
+        Time Complexity: O(D_max) where D_max is the maximum degree of the user being removed.
         Space Complexity: O(1)
         """
         if user_id not in self.users:
@@ -49,10 +49,13 @@ class SocialNetwork:
             return False
         
         # Create a copy of the set of friends to iterate over
-        for friend_id in list(self.adj_list[user_id]):
-            self.adj_list[friend_id].remove(user_id)
-            
-        del self.adj_list[user_id]
+        # Ensure user_id is in adj_list before accessing, though add_user ensures this.
+        if user_id in self.adj_list:
+            for friend_id in list(self.adj_list[user_id]):
+                if friend_id in self.adj_list: # Defensive check
+                    self.adj_list[friend_id].discard(user_id) # Use discard to avoid KeyError if not present
+            del self.adj_list[user_id]
+        
         del self.users[user_id]
         print(f"User {user_id} removed successfully.")
         return True
@@ -112,7 +115,8 @@ class SocialNetwork:
     def suggest_friends(self, user_id):
         """
         Suggests friends by ranking non-friends based on the number of mutual friends.
-        Time Complexity: O(V * D) where V is total users and D is average degree.
+        Time Complexity: O(V * D_avg) where V is total users and D_avg is the average degree.
+        More precisely, O(V * D_max) where D_max is the maximum degree, due to get_mutual_friends.
         Space Complexity: O(V) to store the suggestions.
         """
         if user_id not in self.users:
@@ -231,12 +235,8 @@ def main():
             mutuals = network.get_mutual_friends(uid1, uid2)
             if mutuals:
                 print(f"Mutual friends: {[network.users[m].name for m in mutuals]}")
-            else:
-                # The get_mutual_friends method already prints "One or both users do not exist."
-                # if the users are not found. So, this else block only runs if users exist
-                # but have no mutual friends.
-                if uid1 in network.users and uid2 in network.users:
-                    print("No mutual friends found.")
+            elif uid1 in network.users and uid2 in network.users: # Only print if users exist but no mutuals
+                print("No mutual friends found.")
             
         elif choice == '6':
             uid = input("Enter user ID: ")
@@ -245,12 +245,8 @@ def main():
                 print("Friend Suggestions (Ranked by mutual friends):")
                 for s_id, count in suggestions:
                     print(f"- {network.users[s_id].name} (ID: {s_id}) with {count} mutual friends")
-            else:
-                # The suggest_friends method already prints "User does not exist."
-                # if the user is not found. So, this else block only runs if the user exists
-                # but has no suggestions.
-                if uid in network.users:
-                    print("No suggestions available.")
+            elif uid in network.users: # Only print if user exists but no suggestions
+                print("No suggestions available.")
                 
         elif choice == '7':
             uid1 = input("Enter start user ID: ")
@@ -259,12 +255,8 @@ def main():
             if path:
                 names = [network.users[p].name for p in path]
                 print(f"Shortest path ({len(path)-1} degrees of separation): {' -> '.join(names)}")
-            else:
-                # The shortest_path method already prints "One or both users do not exist."
-                # if the users are not found. So, this else block only runs if users exist
-                # but no path is found.
-                if uid1 in network.users and uid2 in network.users:
-                    print("No path found between these users.")
+            elif uid1 in network.users and uid2 in network.users: # Only print if users exist but no path
+                print("No path found between these users.")
                 
         elif choice == '8':
             network.display_network()
