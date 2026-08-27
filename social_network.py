@@ -25,7 +25,7 @@ class SocialNetwork:
             print(f"User with ID {user_id} already exists.")
             return False
         
-        self.users[user_id] = User(user_id, name, age)
+        self.users[user_id] = Users(user_id, name, age)
         self.adj_list[user_id] = set()
         print(f"User '{name}' added successfully.")
         return True
@@ -136,7 +136,7 @@ class SocialNetwork:
         if start_id == target_id:
             return [start_id]
             
-        quue = collections.deque([[start_id]])
+        queue = collections.deque([[start_id]])
         visited = set([start_id])
         
         while queue:
