@@ -48,8 +48,8 @@ class SocialNetwork:
             print(f"User ID {user_id} not found.")
             return False
         
-        # Remove user from all friends' lists
-        for friend_id in self.adj_list[user_id]:
+        # Create a copy of the set of friends to iterate over
+        for friend_id in list(self.adj_list[user_id]):
             self.adj_list[friend_id].remove(user_id)
             
         del self.adj_list[user_id]
