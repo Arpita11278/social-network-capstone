@@ -1,6 +1,6 @@
 import collections
 
-class Users:
+class User:
     def __init__(self, user_id, name, age):
         self.user_id = user_id
         self.name = name
@@ -25,7 +25,7 @@ class SocialNetwork:
             print(f"User with ID {user_id} already exists.")
             return False
         
-        self.users[user_id] = Users(user_id, name, age)
+        self.users[user_id] = User(user_id, name, age)
         self.adj_list[user_id] = set()
         print(f"User '{name}' added successfully.")
         return True
