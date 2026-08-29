@@ -34,7 +34,7 @@ class SocialNetwork:
             print("Invalid age. Please enter a number.")
             return False
         
-        self.users[user_id] = Users(user_id, name, age)
+        self.users[user_id] = User(user_id, name, age)
         self.adj_list[user_id] = set()
         print(f"User '{name}' added successfully.")
         return True
@@ -152,7 +152,7 @@ class SocialNetwork:
         if start_id == target_id:
             return [start_id]
             
-        quue = collections.deque([[start_id]])
+        queue = collections.deque([[start_id]])
         visited = set([start_id])
         
         while queue:
@@ -177,6 +177,19 @@ class SocialNetwork:
             friend_names = [self.users[fid].name for fid in friends]
             print(f"{self.users[user_id].name} ({user_id}) -> {', '.join(friend_names) if friend_names else 'No friends'}")
         print("-------------------------------------")
+
+def main():
+    sn = SocialNetwork()
+    sn.add_user(1, "Alice", 30)
+    sn.add_user(2, "Bob", 25)
+    sn.add_user(3, "Charlie", 35)
+    sn.add_user(4, "David", 28)
+    sn.add_friendship(1, 2)
+    sn.add_friendship(2, 3)
+    sn.add_friendship(1, 4)
+    sn.display_network()
+    print("Shortest path from 1 to 3:", sn.shortest_path(1, 3))
+    print("Suggestions for user 1:", sn.suggest_friends(1))
 
 if __name__ == "__main__":
     main()
