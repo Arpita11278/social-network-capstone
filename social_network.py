@@ -34,7 +34,7 @@ class SocialNetwork:
             print("Invalid age. Please enter a number.")
             return False
         
-        self.users[user_id] = User(user_id, name, age)
+        self.users[user_id] = Users(user_id, name, age)
         self.adj_list[user_id] = set()
         print(f"User '{name}' added successfully.")
         return True
@@ -152,7 +152,7 @@ class SocialNetwork:
         if start_id == target_id:
             return [start_id]
             
-        quue = collections.deque([[start_id]])
+        queue = collections.deque([[start_id]])
         visited = set([start_id])
         
         while queue:
@@ -177,95 +177,6 @@ class SocialNetwork:
             friend_names = [self.users[fid].name for fid in friends]
             print(f"{self.users[user_id].name} ({user_id}) -> {', '.join(friend_names) if friend_names else 'No friends'}")
         print("-------------------------------------")
-
-
-def main():
-    network = SocialNetwork()
-    
-    print("Initializing capstone project with sample data...")
-    network.add_user("u1", "Alice", 25)
-    network.add_user("u2", "Bob", 27)
-    network.add_user("u3", "Charlie", 22)
-    network.add_user("u4", "David", 30)
-    network.add_user("u5", "Eve", 28)
-    
-    network.add_friendship("u1", "u2")
-    network.add_friendship("u1", "u3")
-    network.add_friendship("u2", "u4")
-    network.add_friendship("u3", "u4")
-    network.add_friendship("u4", "u5")
-    
-    while True:
-        print("\n=== Social Network Menu ===")
-        print("1. Add User")
-        print("2. Remove User")
-        print("3. Add Friendship")
-        print("4. Remove Friendship")
-        print("5. Find Mutual Friends")
-        print("6. Suggest Friends")
-        print("7. Find Shortest Path (Degrees of Separation)")
-        print("8. Display Network")
-        print("9. Exit")
-        
-        choice = input("Enter your choice: ")
-        
-        if choice == '1':
-            uid = input("Enter user ID: ")
-            name = input("Enter user name: ")
-            age = input("Enter user age: ")
-            network.add_user(uid, name, age)
-            
-        elif choice == '2':
-            uid = input("Enter user ID to remove: ")
-            network.remove_user(uid)
-            
-        elif choice == '3':
-            uid1 = input("Enter first user ID: ")
-            uid2 = input("Enter second user ID: ")
-            network.add_friendship(uid1, uid2)
-            
-        elif choice == '4':
-            uid1 = input("Enter first user ID: ")
-            uid2 = input("Enter second user ID: ")
-            network.remove_friendship(uid1, uid2)
-            
-        elif choice == '5':
-            uid1 = input("Enter first user ID: ")
-            uid2 = input("Enter second user ID: ")
-            mutuals = network.get_mutual_friends(uid1, uid2)
-            if mutuals:
-                print(f"Mutual friends: {[network.users[m].name for m in mutuals]}")
-            elif uid1 in network.users and uid2 in network.users: # Only print if users exist but no mutuals
-                print("No mutual friends found.")
-            
-        elif choice == '6':
-            uid = input("Enter user ID: ")
-            suggestions = network.suggest_friends(uid)
-            if suggestions:
-                print("Friend Suggestions (Ranked by mutual friends):")
-                for s_id, count in suggestions:
-                    print(f"- {network.users[s_id].name} (ID: {s_id}) with {count} mutual friends")
-            elif uid in network.users: # Only print if user exists but no suggestions
-                print("No suggestions available.")
-                
-        elif choice == '7':
-            uid1 = input("Enter start user ID: ")
-            uid2 = input("Enter target user ID: ")
-            path = network.shortest_path(uid1, uid2)
-            if path:
-                names = [network.users[p].name for p in path]
-                print(f"Shortest path ({len(path)-1} degrees of separation): {' -> '.join(names)}")
-            elif uid1 in network.users and uid2 in network.users: # Only print if users exist but no path
-                print("No path found between these users.")
-                
-        elif choice == '8':
-            network.display_network()
-            
-        elif choice == '9':
-            print("Exiting...")
-            break
-        else:
-            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()
