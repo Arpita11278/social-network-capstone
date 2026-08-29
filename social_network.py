@@ -152,7 +152,7 @@ class SocialNetwork:
         if start_id == target_id:
             return [start_id]
             
-        quue = collections.deque([[start_id]])
+        queue = collections.deque([[start_id]])
         visited = set([start_id])
         
         while queue:
