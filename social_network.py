@@ -1,6 +1,6 @@
 import collections
 
-class Users:
+class User:
     def __init__(self, user_id, name, age):
         self.user_id = user_id
         self.name = name
@@ -152,7 +152,7 @@ class SocialNetwork:
         if start_id == target_id:
             return [start_id]
             
-        quue = collections.deque([[start_id]])
+        queue = collections.deque([[start_id]])
         visited = set([start_id])
         
         while queue:
@@ -174,7 +174,7 @@ class SocialNetwork:
         """
         print("\n--- Social Network Adjacency List ---")
         for user_id, friends in self.adj_list.items():
-            friend_names = [self.users[fid].name for fid in friends]
+            friend_names = [self.users[fid].name for fid in friends if fid in self.users]
             print(f"{self.users[user_id].name} ({user_id}) -> {', '.join(friend_names) if friend_names else 'No friends'}")
         print("-------------------------------------")
 
